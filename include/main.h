@@ -16,8 +16,12 @@
 
 void sensorTask(void *pvParameters);
 void loggerTask(void *pvParameters);
+void cliTask(void *pvParameters);
+void commandHandler(const char* command);
+void printHelp();
 
 QueueHandle_t sensorQueue;
+SemaphoreHandle_t configMutex;
 typedef struct {
     float temprature;
     float humidity;
