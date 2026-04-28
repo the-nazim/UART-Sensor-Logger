@@ -14,6 +14,10 @@
 #include "freertos/queue.h"
 #include "freertos/semphr.h"
 
+void sensorTask(void *pvParameters);
+void loggerTask(void *pvParameters);
+
+QueueHandle_t sensorQueue;
 typedef struct {
     float temprature;
     float humidity;
