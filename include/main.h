@@ -20,8 +20,10 @@ void cliTask(void *pvParameters);
 void commandHandler(const char* command);
 void printHelp();
 
-QueueHandle_t sensorQueue;
-SemaphoreHandle_t configMutex;
+extern QueueHandle_t sensorQueue;
+extern SemaphoreHandle_t configMutex;
+extern DHT dht;
+
 typedef struct {
     float temprature;
     float humidity;
@@ -29,6 +31,11 @@ typedef struct {
     bool valid;
 } SensorReading;
 
-DHT dht(DHT_PIN, DHT_TYPE);
+typedef struct {
+    bool loggingEnabled;
+    uint32_t readInterval; // in milliseconds
+} LoggerConfig;
+
+extern LoggerConfig logconfig;
 
 #endif

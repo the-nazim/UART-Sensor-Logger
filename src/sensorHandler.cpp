@@ -4,14 +4,24 @@ void sensorTask(void *pvParameters) {
     while (true)
     {
         SensorReading sr;
-    
-        sr.temprature = dht.readTemperature();
-        sr.humidity = dht.readHumidity();
-        sr.timestamp = millis();
-        sr.valid = !isnan(sr.temprature) && !isnan(sr.humidity);
+        uint32_t localInterval;
+        bool localLogging;
 
-        xQueueSend(sensorQueue, &sr, portMAX_DELAY); // Send the sensor reading to the queue
+        if(xSemaphoreTake(configMutex, pdMS_TO_TICKS(100)) == pdTRUE) {
+            localInterval = logconfig.readInterval;
+            localLogging = logconfig.loggingEnabled;
+            xSemaphoreGive(configMutex);
+        }
 
-        vTaskDelay(pdMS_TO_TICKS(2000)); // Delay for 2 seconds
+        if (localLogging) 
+        {    
+            sr.temprature = dht.readTemperature();
+            sr.humidity = dht.readHumidity();
+            sr.timestamp = millis();
+            sr.valid = !isnan(sr.temprature) && !isnan(sr.humidity);
+
+            xQueueSend(sensorQueue, &sr, portMAX_DELAY); // Send the sensor reading to the queue
+        }    
+        vTaskDelay(pdMS_TO_TICKS(localInterval));
     }
 }
