@@ -34,9 +34,9 @@ typedef struct {
 typedef struct {
     bool loggingEnabled;
     uint32_t readInterval; // in milliseconds
+    uint32_t logCount; // Total number of logs recorded
 } LoggerConfig;
 
 extern LoggerConfig logconfig;
-extern uint32_t logCount;
 
 #endif

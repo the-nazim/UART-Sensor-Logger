@@ -2,7 +2,8 @@
 
 LoggerConfig logconfig = {
     true,
-    2000
+    2000,
+    0
 };
 
 void printHelp() {
@@ -20,7 +21,7 @@ void printStatus() {
     Serial.printf("[STATUS] logging=%s  interval=%lus  total_logs=%lu\r\n",
       logconfig.loggingEnabled ? "ON" : "OFF",
       logconfig.readInterval / 1000,
-      logCount);
+      logconfig.logCount);
     xSemaphoreGive(configMutex);
   }
 }

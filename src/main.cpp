@@ -6,8 +6,7 @@ DHT dht(DHT_PIN, DHT_TYPE);
 
 void setup() {
     Serial.begin(115200);
-    dht.begin();
-    logCount = 0; // Initialize log count
+    dht.begin(); 
     
     sensorQueue = xQueueCreate(QUEUE_SIZE, sizeof(SensorReading)); // Create the sensor data queue
     configMutex = xSemaphoreCreateMutex(); // Create the configuration mutex
