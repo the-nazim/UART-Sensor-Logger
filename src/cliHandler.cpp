@@ -5,8 +5,6 @@ LoggerConfig logconfig = {
     2000
 };
 
-uint32_t logCount = 0;
-
 void printHelp() {
   Serial.println(F("\r\n=== Sensor Logger CLI ==="));
   Serial.println(F("  start           - resume logging"));
@@ -61,5 +59,36 @@ void commandHandler(const char* command) {
         printHelp();
     else if (strcmp(command, "status") == 0)
         printStatus();
+    else if (strcmp(command, "start") == 0) {
+        if (xSemaphoreTake(configMutex, pdMS_TO_TICKS(100)) == pdTRUE) {
+            logconfig.loggingEnabled = true;
+            xSemaphoreGive(configMutex);
+        }
+        Serial.println(F("[CLI] Logging resumed."));
+    }
+    else if (strcmp(command, "stop") == 0) {
+        if (xSemaphoreTake(configMutex, pdMS_TO_TICKS(100)) == pdTRUE) {
+            logconfig.loggingEnabled = false;
+            xSemaphoreGive(configMutex);
+        }
+        Serial.println(F("[CLI] Logging paused."));
+    }
+    else if (strncmp(command, "interval ", 9) == 0) {
+        int sec = atoi(command + 9);
+        if (sec >= 1 && sec <= 60) {
+            if (xSemaphoreTake(configMutex, pdMS_TO_TICKS(100)) == pdTRUE) {
+                logconfig.readInterval = sec * 1000;
+                xSemaphoreGive(configMutex);
+            }
+        }
+        else {
+            Serial.println("[CLI] Error: Interval must be between 1 and 60 seconds");
+        }
+    }
+    else {
+        Serial.printf("[CLI] Unknown command: '%s'. Type 'help'.\r\n", command);
+    }
+
+    
     
 }

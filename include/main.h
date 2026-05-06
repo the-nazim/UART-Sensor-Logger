@@ -37,5 +37,6 @@ typedef struct {
 } LoggerConfig;
 
 extern LoggerConfig logconfig;
+extern uint32_t logCount;
 
 #endif
